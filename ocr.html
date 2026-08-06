@@ -1,0 +1,30 @@
+<!--We could have users actually handwrite the digits on the page using an HTML canvas. 
+We could then give them a couple of options to either train or test the network, 
+where training the network also involves specifying what digit was drawn. 
+This way it is possible to easily outsource the data collection by pointing people to a website
+to receive their input.-->
+
+<html>
+    <head>
+        <script src="ocr.js"></script>
+        <link rel="stylesheet" type="text/css" href="ocr.css" />
+        <title></title>
+    </head>
+    <body onload="ocdDemo.onLoadFunction()">
+        <div id="main-container" style="text-align: center">
+            <h1>OCR Digit Prediction</h1>
+            <canvas id="canvas" width="200" height="200"></canvas>
+            <form id="input">
+                <p>Digit: <input type="text" id="digit" /></p>
+                <input type="button" value="Train" onclick="ocdDemo.train()" />
+                <input type="button" value="Test" onclick="ocdDemo.test()" />
+                <input
+                    type="button"
+                    value="Reset"
+                    onclick="ocdDemo.resetCanvas()"
+                    ;
+                />
+            </form>
+        </div>
+    </body>
+</html>
