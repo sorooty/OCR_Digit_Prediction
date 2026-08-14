@@ -10,20 +10,15 @@ to receive their input.-->
         <link rel="stylesheet" type="text/css" href="ocr.css" />
         <title></title>
     </head>
-    <body onload="ocdDemo.onLoadFunction()">
+    <body onload="ocrDemo.onLoadFunction()">
         <div id="main-container" style="text-align: center">
             <h1>OCR Digit Prediction</h1>
             <canvas id="canvas" width="200" height="200"></canvas>
             <form id="input">
                 <p>Digit: <input type="text" id="digit" /></p>
-                <input type="button" value="Train" onclick="ocdDemo.train()" />
-                <input type="button" value="Test" onclick="ocdDemo.test()" />
-                <input
-                    type="button"
-                    value="Reset"
-                    onclick="ocdDemo.resetCanvas()"
-                    ;
-                />
+                <input type="button" value="Train" onclick="ocrDemo.train()" />
+                <input type="button" value="Test" onclick="ocrDemo.test()" />
+                <input type="button" value="Reset" onclick="ocrDemo.resetCanvas()" />
             </form>
         </div>
     </body>
