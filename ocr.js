@@ -113,6 +113,23 @@ var ocrDemo = {
     }
   },
 
+  // Recupere et affiche les indicateurs depuis GET /stats
+  loadStats: function () {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", this.HOST + ":" + this.PORT + "/stats", true);
+    xmlHttp.onload = function () {
+      if (xmlHttp.status === 200) {
+        var s = JSON.parse(xmlHttp.responseText);
+        document.getElementById("stats").innerHTML =
+          "Precision : " + (s.accuracy * 100).toFixed(1) + "% | " +
+          "Neurones caches : " + s.hidden_nodes + " | " +
+          "Train : " + s.train_size + " | " +
+          "Test : " + s.test_size;
+      }
+    };
+    xmlHttp.send();
+  },
+
   onError: function (e) { alert("Error occurred while connecting to server: " + e.target.statusText); },
 
   // HTTP POST vers le serveur Python (requete synchrone)

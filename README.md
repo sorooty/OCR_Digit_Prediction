@@ -4,6 +4,18 @@ Projet personnel : un système de reconnaissance optique de chiffres (0-9) basé
 
 ---
 
+## Aperçu
+
+Interface de dessin avec canvas 20x20 pixels et affichage des métriques en temps réel.
+
+![UI avec stats](assets/UI2.png)
+
+Envoi des données d'entraînement au serveur.
+
+![Envoi données](assets/Trained%20data%20.png)
+
+---
+
 ## Architecture
 
 Le projet est composé de trois fichiers Python et d'un frontend web :
@@ -37,6 +49,39 @@ La fonction d'activation utilisée est la sigmoïde. L'entraînement se fait par
 
 ---
 
+## Observations et résultats
+
+Métriques obtenues sur le dataset sklearn digits (1797 images au total) :
+
+| Métrique | Valeur |
+|---|---|
+| Précision | 84.4% |
+| Neurones cachés | 15 |
+| Données d'entraînement | 1347 images (75%) |
+| Données de test | 450 images (25%) |
+
+**Interprétation :**
+
+- **84.4%** est une précision correcte pour un réseau aussi simple, entraîné sans framework et avec peu de données. Cela signifie qu'environ 1 chiffre sur 6 est mal prédit.
+- La précision est calculée en moyenne sur 100 passes pour lisser les variations dues à l'initialisation aléatoire des poids.
+- Le réseau est plus à l'aise sur des chiffres bien formés et centrés dans le canvas. Les chiffres écrits de manière atypique ou décentrés sont plus souvent mal reconnus.
+- Le dataset sklearn digits contient des images 8x8 redimensionnées en 20x20, ce qui introduit une légère perte de qualité par rapport à des données dessinées directement à la main.
+
+---
+
+## Pistes d'optimisation
+
+- **Augmenter le nombre de neurones cachés** : passer de 15 à 25-30 améliorerait la capacité du modèle à représenter des patterns complexes, au prix d'un entraînement plus long.
+- **Utiliser un meilleur dataset** : remplacer sklearn digits (8x8) par MNIST (28x28, 70 000 images) apporterait plus de diversité et une meilleure généralisation.
+- **Augmenter le taux d'apprentissage adaptatif** : le taux fixe à 0.1 peut être trop grand ou trop petit selon l'étape. Un optimiseur comme Adam ajuste ce taux automatiquement.
+- **Ajouter plusieurs couches cachées** : une seule couche cachée limite la capacité du réseau à apprendre des représentations abstraites. Deux couches améliorent souvent les performances.
+- **Normaliser les données d'entrée** : les pixels ne sont pas tous dans le même intervalle selon la façon dont l'utilisateur dessine. Une normalisation stricte stabilise l'entraînement.
+- **Ajouter de la data augmentation** : générer des variantes légèrement décalées, pivotées ou épaissies des images dessinées permettrait au réseau de mieux gérer les styles d'écriture différents.
+
+**Limite principale** : l'architecture actuelle (ANN dense) ne tient pas compte de la structure spatiale de l'image. Un réseau convolutif (CNN) serait bien plus adapté à la reconnaissance de chiffres manuscrits et atteindrait facilement 98-99% de précision sur MNIST.
+
+---
+
 ## Lancer le projet
 
 ```bash
@@ -52,7 +97,6 @@ Le serveur démarre sur `http://localhost:8000`. Ouvrir ensuite le fichier HTML 
 - Python 3
 - numpy
 - scikit-learn
-
 
 ---
 

@@ -2,10 +2,10 @@
 # HTTPServer (pas HTTPSServer) est le serveur HTTP standard de Python.
 # BaseHTTPRequestHandler fournit la structure pour gérer les requêtes HTTP.
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from ocr import OCRNeuralNetwork   # Import de notre classe
+from ocr import OCRNeuralNetwork
+from neural_network_design import test
 import json
 
-# On charge le dataset MNIST-like depuis sklearn pour l'entraînement initial
 from sklearn.datasets import load_digits
 from sklearn.utils import Bunch
 from typing import cast
@@ -31,11 +31,33 @@ train_indices = list(range(int(n * 0.75)))
 test_indices  = list(range(int(n * 0.75), n))
 
 # Création du réseau avec 15 nœuds cachés (meilleur compromis perf/coût calculé)
-# use_file=True → charge depuis nn.json si existant, sinon entraîne et sauvegarde
+# use_file=True, charge depuis nn.json si existant, sinon entraîne et sauvegarde
 nn = OCRNeuralNetwork(15, data_matrix, data_labels, train_indices, use_file=True)
 
 # Gestionnaire de requêtes HTTP
 class OcrHttpHandler(BaseHTTPRequestHandler):
+
+    def do_GET(self):
+        """
+        Retourne les indicateurs de performance du réseau.
+        GET /stats -> { "accuracy": 0.91, "hidden_nodes": 15, "train_size": 1347, "test_size": 450 }
+        """
+        if self.path == '/stats':
+            accuracy = test(data_matrix, data_labels, test_indices, nn)
+            stats = {
+                "accuracy": round(accuracy, 4),
+                "hidden_nodes": 15,
+                "train_size": len(train_indices),
+                "test_size": len(test_indices)
+            }
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(json.dumps(stats).encode())
+        else:
+            self.send_response(404)
+            self.end_headers()
 
     def do_POST(self):
         """
